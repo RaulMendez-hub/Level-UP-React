@@ -1,6 +1,8 @@
+import { Cards } from "./nshared/Cards"
 import { Carousel } from "./nshared/Carousel"
 import { Header } from "./shared/components/Header"
 import { Navbar } from "./shared/components/Navbar"
+
 
 
 export const Index = () => {
@@ -11,7 +13,7 @@ export const Index = () => {
         vcarrito={0}
         />
         <Carousel />
-        
+        <Cards />
         </>
     )
         

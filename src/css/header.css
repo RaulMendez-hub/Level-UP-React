@@ -26,6 +26,13 @@
     background: rgb(217, 217, 217);
     border-radius: 10px;
 }
+#valorcarrito{
+    color: black;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .logo img {
     height: 40px;

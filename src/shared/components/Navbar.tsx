@@ -61,7 +61,7 @@ export const Navbar = ({ vcarrito }: NavbarProps) => {
             <img alt="" className="btn-primary" id="user" src={carrito} />
             <ul className="dropdown-menu">
               <li>
-                <span>{vcarrito = 0}</span>
+                <span id="valorcarrito">${vcarrito = 0}</span>
               </li>
             </ul>
           {/* <div className="carrito drop-menu">
