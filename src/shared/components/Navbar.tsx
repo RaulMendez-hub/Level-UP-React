@@ -2,6 +2,8 @@ import logo from '../../image/logo.png';
 import carrito from '../../image/carro.png';
 import user from '../../image/user.webp';
 
+// import { Link } from 'react-router-dom';
+
 
 interface NavbarProps {
   vcarrito: number;
@@ -48,7 +50,7 @@ export const Navbar = ({ vcarrito }: NavbarProps) => {
               </li>
             </ul>
           </li>
-          <a className="link" href="/eventos.html">
+          <a className="link" to="./Eventos.tsx">
             Eventos
           </a>
           <a className="link" href="/tecnico.html">
