@@ -1,8 +1,8 @@
 import logo from '../../image/logo.png';
 import carrito from '../../image/carro.png';
 import user from '../../image/user.webp';
+import { Link } from 'react-router-dom';
 
-// import { Link } from 'react-router-dom';
 
 
 interface NavbarProps {
@@ -16,46 +16,42 @@ export const Navbar = ({ vcarrito }: NavbarProps) => {
           <img src={logo} alt='Logo Empresa'/>
         </div>
         <div className="links" id="nav-links">
-          <a className="link" href="/index.html">
-            Home
-          </a>
+          <Link className="link" to={'/'}>Home</Link>
           <li className="dropdown">
-            <a className="drop" href="#">
+            <Link className="drop" to="#">
               Categorias
-            </a>
+            </Link>
             <ul className="dropdown-menu">
               <li>
-                <a href="/consolas.html">Consolas</a>
+                <Link to={'/consolas'}>Consolas</Link>
               </li>
               <li>
-                <a href="/accesorios.html">Accesorios</a>
+                <Link to={'/accesorios'}>Accesorios</Link>
               </li>
               <li>
-                <a href="/computadores.html">Computadores Gamer</a>
+                <Link to={'/computadores'}>Computadores Gamer</Link>
               </li>
               <li>
-                <a href="/sillas.html">Sillas Gamer</a>
+                <Link to={'/sillas'}>Sillas Gamer</Link>
               </li>
               <li>
-                <a href="/mouse.html">Mouse</a>
+                <Link to={'/mouse'}>Mouse</Link>
               </li>
               <li>
-                <a href="/mousepad.html">Mousepad</a>
+                <Link to={'/mousepad'}>Mousepad</Link>
               </li>
               <li>
-                <a href="/juegosMesa.html">Juegos de mesa</a>
+                <Link to={'/juegosMesa'}>Juegos de mesa</Link>
               </li>
               <li>
-                <a href="/merch.html">Merch</a>
+                <Link to={'/merch'}>Merch</Link>
               </li>
             </ul>
           </li>
-          <a className="link" to="./Eventos.tsx">
-            Eventos
-          </a>
-          <a className="link" href="/tecnico.html">
+          <Link className="link" to={"/eventos"}>Eventos</Link>
+          <Link className="link" to={"/tecnico"}>
             Servicio Tecnico
-          </a>
+          </Link>
         </div>
         <div className="dropes">
 

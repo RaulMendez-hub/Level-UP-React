@@ -2,10 +2,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import {Index} from "./Index";
+import {App } from "./App";
 import "./css/header.css"
 import "./css/main.css"
 import "./css/styles.css"
+import { BrowserRouter} from 'react-router-dom';
 
 
 
@@ -14,7 +15,9 @@ import "./css/styles.css"
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Index />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
 
   </StrictMode>,
 )

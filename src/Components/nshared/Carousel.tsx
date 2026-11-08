@@ -1,8 +1,8 @@
 
-import wolverine from '../image/1.webp';
-import gta from '../image/2.webp';
-import pc from '../image/3.webp';
-import pc2 from '../image/4.webp';
+import wolverine from '../../image/1.webp';
+import gta from '../../image/2.webp';
+import pc from '../../image/3.webp';
+import pc2 from '../../image/4.webp';
 
 export const Carousel = () => {
   return (

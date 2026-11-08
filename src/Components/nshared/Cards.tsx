@@ -1,13 +1,13 @@
-import React from 'react'
-import gta6 from '../image/cards1.jpeg'
-import kojima from '../image/kojimacard.jpg'
-import coxon from '../image/coxoncard.jpg'
-import townfall from '../image/townfallcard.jpg'
-import wolverine from '../image/wolverinecard.webp'
-import witcher3 from '../image/witcher3card.jpg'
-import diablo5 from '../image/diablo5card.jpg'
-import zeldaoot from '../image/zeldaoot.jpeg'
-import control from '../image/controlcard.avif'
+
+import gta6 from '../../image/cards1.jpeg'
+import kojima from '../../image/kojimacard.jpg'
+import coxon from '../../image/coxoncard.jpg'
+import townfall from '../../image/townfallcard.jpg'
+import wolverine from '../../image/wolverinecard.webp'
+import witcher3 from '../../image/witcher3card.jpg'
+import diablo5 from '../../image/diablo5card.jpg'
+import zeldaoot from '../../image/zeldaoot.jpeg'
+import control from '../../image/controlcard.avif'
 
 
 export const Cards = () => {
