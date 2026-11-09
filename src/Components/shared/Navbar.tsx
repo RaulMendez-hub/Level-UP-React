@@ -7,9 +7,10 @@ import { Link } from 'react-router-dom';
 
 interface NavbarProps {
   vcarrito: number;
+  placeholder?: string;
 }
 
-export const Navbar = ({ vcarrito }: NavbarProps) => {
+export const Navbar = ({ vcarrito, placeholder = "Buscar" }: NavbarProps) => {
   return (
       <nav className="navbar" id="navbar">
         <div className="logo">
@@ -35,12 +36,6 @@ export const Navbar = ({ vcarrito }: NavbarProps) => {
                 <Link to={'/sillas'}>Sillas Gamer</Link>
               </li>
               <li>
-                <Link to={'/mouse'}>Mouse</Link>
-              </li>
-              <li>
-                <Link to={'/mousepad'}>Mousepad</Link>
-              </li>
-              <li>
                 <Link to={'/juegosMesa'}>Juegos de mesa</Link>
               </li>
               <li>
@@ -49,45 +44,44 @@ export const Navbar = ({ vcarrito }: NavbarProps) => {
             </ul>
           </li>
           <Link className="link" to={"/eventos"}>Eventos</Link>
-          <Link className="link" to={"/tecnico"}>
-            Servicio Tecnico
-          </Link>
+          <Link className="link" to={"/tecnico"}>Servicio Tecnico</Link>
+          
         </div>
+          <div className="search-container">
+          <input className="buscar" type="text" placeholder={placeholder} />
+          <button className="btn-buscar">Buscar</button>
+          </div>
+
         <div className="dropes">
 
           <div className="dropdown">
+            <Link to={'/Carro'}>
             <img alt="" className="btn-primary" id="user" src={carrito} />
             <ul className="dropdown-menu">
               <li>
                 <span id="valorcarrito">${vcarrito = 0}</span>
               </li>
             </ul>
-          {/* <div className="carrito drop-menu">
-            <a href="/carrito.html">
-              <img alt="" className="btn-primary" id="user" src={carrito} />
-            </a>
-              <li>
-              <span>{vcarrito = 0}</span>  
-              </li> */}
+            </Link>
           </div>
           <div className="dropdown">
             <img alt="" className="btn-primary" id="user" src={user} />
             <ul className="dropdown-menu">
               <li>
-                <a href="/iniciarSesion.html">Iniciar Sesion</a>
+                <Link to={"/IniciarSesion"}>Iniciar Sesion</Link>
               </li>
               <li>
-                <a href="/registro.html">Registro</a>
+                <Link to={"/registro"}>Registro</Link>
               </li>
               <li>
-                <a href="/perfil.html">Perfil</a>
+                <Link to={"/perfil"}>Perfil</Link>
               </li>
               <li>
-                <a href="/index.html">Cerrar Sesion</a>
+                <Link to={"/"}>Cerrar Sesion</Link>
               </li>
             </ul>
           </div>
         </div>
-</nav>
+    </nav>
   )
 }

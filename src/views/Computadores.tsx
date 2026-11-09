@@ -1,7 +1,9 @@
 
+import { CardsComputers } from "../Components/nshared/CardsComputers"
 
 export const Computadores = () => {
   return (
-    <div>Computadores</div>
+    <CardsComputers />
+    
   )
 }

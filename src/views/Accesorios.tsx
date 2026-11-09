@@ -1,6 +1,7 @@
+import { CardsAccesorios } from "../Components/nshared/CardsAccesorios"
 
 export const Accesorios = () => {
   return (
-    <div>Accesorios</div>
+    <CardsAccesorios />
   )
 }

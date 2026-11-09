@@ -133,3 +133,29 @@
     display: flex;
     gap: 10px;
 }
+.search-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.buscar{
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+    height: 40px;
+    max-width: 500px;
+}
+.btn-buscar{
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #2563eb;
+    color: black;
+    cursor: pointer;
+    height: 40px;
+    font-size: 15px;
+}
+

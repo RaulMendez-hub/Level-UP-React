@@ -1,7 +1,8 @@
+import { CardsMerch } from "../Components/nshared/CardsMerch"
 
 
 export const Merch = () => {
   return (
-    <div>Merch</div>
+    <CardsMerch />
   )
 }
