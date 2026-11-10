@@ -39,6 +39,7 @@ export const App = () => {
             <Route path="/iniciarSesion" element={<InicioSesion></InicioSesion>}></Route>
             <Route path="/registro" element={<Registro></Registro>}></Route>
             <Route path="/perfil" element={<Perfil></Perfil>}></Route>
+            
 
             
         </Routes>

@@ -7,7 +7,7 @@ export const CardsComputers = () => {
   return (
     <div>
       <div className="titulo1">
-        <h1>Computadores</h1>
+        <h1>COMPUTADORES GAMER</h1>
       </div>
       <div className="Accesorios">
         {computadores.map((computadores) => (
