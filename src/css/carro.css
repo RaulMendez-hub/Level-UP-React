@@ -1,0 +1,52 @@
+.carro {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+  color: white;
+}
+.carro .card {
+  margin-top: 16px;
+  max-width: 100%;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 12px;
+}
+.carro .card img {
+  max-width: 140px;
+  border-radius: 6px;
+}
+.carro-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+.carro-cantidad span {
+  min-width: 2ch;
+  text-align: center;
+  font-weight: 600;
+}
+.carro-resumen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #39ff14;
+}
+.carro-total {
+  margin: 0;
+  font-size: 1.2rem;
+}
+.carro .pago {
+  margin-top: 0;
+  padding: 10px 28px;
+  border: 0;
+  font-weight: 600;
+}
+.carro-mensaje {
+  text-align: center;
+  margin-top: 40px;
+}

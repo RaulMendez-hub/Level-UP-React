@@ -1,0 +1,69 @@
+.admin {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+  color: white;
+}
+.admin-aviso {
+  text-align: center;
+  color: #c9ced6;
+}
+.admin-formulario {
+  background: #15171b;
+  border: 1px solid #39ff14;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 24px 0;
+}
+.admin-formulario h2 {
+  font-size: 1.2rem;
+  margin: 0 0 16px;
+}
+.admin-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+.admin-error {
+  color: #ff6b6b;
+  margin: 16px 0 0;
+}
+.admin-exito {
+  color: #39ff14;
+  margin: 16px 0 0;
+}
+.admin-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.admin-contador {
+  margin: 0;
+}
+.admin-filtro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-filtro select {
+  width: auto;
+}
+.admin-tabla {
+  overflow-x: auto;
+}
+.admin-miniatura {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #333;
+}
+.admin-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
