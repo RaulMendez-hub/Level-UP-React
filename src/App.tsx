@@ -1,3 +1,5 @@
+import { Catalogo } from "./views/Catalogo";
+import { DetalleProducto } from "./views/DetalleProducto";
 import { Route, Routes } from "react-router-dom"
 import { Header } from "./Components/shared/Header"
 import { Navbar } from "./Components/shared/Navbar"
@@ -26,6 +28,8 @@ export const App = () => {
         placeholder="¿Qué estás buscando?"
         />
         <Routes>
+            <Route path="/productos" element={<Catalogo />} />
+            <Route path="/productos/:id" element={<DetalleProducto />} />
             <Route path="/" element={<Home></Home>}></Route>
             <Route path="/eventos" element={<Eventos></Eventos>}></Route>
             <Route path="/consolas" element={<Consolas></Consolas>}></Route>

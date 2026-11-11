@@ -1,3 +1,6 @@
+
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from '../../image/logo.png';
 import carrito from '../../image/carro.png';
 import user from '../../image/user.webp';
@@ -11,6 +14,15 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ vcarrito, placeholder = "Buscar" }: NavbarProps) => {
+
+const [busqueda, setBusqueda] = useState("");
+const navigate = useNavigate();
+
+const buscarProductos = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  navigate(`/productos?q=${encodeURIComponent(busqueda.trim())}`);
+};
   return (
       <nav className="navbar" id="navbar">
         <div className="logo">
@@ -47,10 +59,22 @@ export const Navbar = ({ vcarrito, placeholder = "Buscar" }: NavbarProps) => {
           <Link className="link" to={"/tecnico"}>Servicio Tecnico</Link>
           
         </div>
-          <div className="search-container">
-          <input className="buscar" type="text" placeholder={placeholder} />
-          <button className="btn-buscar">Buscar</button>
-          </div>
+        <form
+        className="search-container"
+        onSubmit={buscarProductos}
+        >
+          <input
+          className="buscar"
+          type="search"
+          placeholder={placeholder}
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          />
+          
+          <button className="btn-buscar" type="submit">
+            Buscar
+            </button>
+        </form>
 
         <div className="dropes">
 
