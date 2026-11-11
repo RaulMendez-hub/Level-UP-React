@@ -55,6 +55,5 @@ describe('Componente Navbar', () => {
     expect(screen.getByRole('link', { name: /iniciar sesion/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /registro/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /perfil/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /cerrar sesion/i })).toBeInTheDocument();
   });
 });

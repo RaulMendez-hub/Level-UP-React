@@ -54,16 +54,11 @@ export const Navbar = ({ vcarrito, placeholder = "Buscar" }: NavbarProps) => {
 
         <div className="dropes">
 
-          <div className="dropdown">
             <Link to={'/Carro'}>
             <img alt="" className="btn-primary" id="user" src={carrito} />
             <ul className="dropdown-menu">
-              <li>
-                <span id="valorcarrito">${vcarrito = 0}</span>
-              </li>
             </ul>
             </Link>
-          </div>
           <div className="dropdown">
             <img alt="" className="btn-primary" id="user" src={user} />
             <ul className="dropdown-menu">
@@ -75,9 +70,6 @@ export const Navbar = ({ vcarrito, placeholder = "Buscar" }: NavbarProps) => {
               </li>
               <li>
                 <Link to={"/perfil"}>Perfil</Link>
-              </li>
-              <li>
-                <Link to={"/"}>Cerrar Sesion</Link>
               </li>
             </ul>
           </div>
