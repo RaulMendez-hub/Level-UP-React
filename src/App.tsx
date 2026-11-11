@@ -14,6 +14,11 @@ import { Tecnico } from "./views/Tecnico"
 import { Perfil } from "./views/Perfil"
 import { Registro } from "./views/Registro"
 import { InicioSesion } from "./Components/nshared/InicioSesion"
+import "./css/init.css"
+import { Admin } from "./views/Admin"
+import { Checkout } from "./views/Checkout"
+import "./css/styles.css"
+
 
 
 
@@ -39,6 +44,9 @@ export const App = () => {
             <Route path="/iniciarSesion" element={<InicioSesion></InicioSesion>}></Route>
             <Route path="/registro" element={<Registro></Registro>}></Route>
             <Route path="/perfil" element={<Perfil></Perfil>}></Route>
+            <Route path="/Admin" element={<Admin></Admin>}></Route>
+            <Route path="/Checkout" element={<Checkout></Checkout>}></Route>
+ 
             
 
             

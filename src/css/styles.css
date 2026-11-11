@@ -28,3 +28,24 @@ footer{
   align-items: center;
   justify-content: center;
 }
+
+
+@media (min-width: 768px) {
+  .gifs-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gifs-container {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .gifs-container {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 40px;
+  }}

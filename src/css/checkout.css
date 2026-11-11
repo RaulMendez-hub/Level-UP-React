@@ -1,0 +1,51 @@
+.checkout {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+  color: white;
+}
+.checkout-caja {
+  background: #15171b;
+  border: 1px solid #39ff14;
+  border-radius: 8px;
+  padding: 20px;
+}
+.checkout-caja h2 {
+  font-size: 1.2rem;
+  margin: 0 0 16px;
+}
+.checkout-error {
+  display: block;
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+.checkout-error-general {
+  margin: 16px 0 0;
+  font-size: 1rem;
+}
+.checkout-caja .pago {
+  margin-top: 20px;
+  padding: 10px 28px;
+  border: 0;
+  font-weight: 600;
+}
+.checkout-items {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+.checkout-items li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #2c3037;
+}
+.checkout-total {
+  font-size: 1.1rem;
+}
+.checkout-confirmacion {
+  text-align: center;
+  margin-top: 40px;
+}

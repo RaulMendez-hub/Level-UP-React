@@ -1,11 +1,9 @@
-import React from 'react'
 
 export const RegistroComponentes = () => {
   return (
     <div>
-        {`div class="registro-box">            `}
         <h1>
-            Crear <span> Cuenta</span>
+            CREAR CUENTA
         </h1>
         <p className="sub">
             {" "}

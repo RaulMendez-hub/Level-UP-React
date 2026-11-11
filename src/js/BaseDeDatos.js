@@ -1,29 +1,4 @@
-/**
- * ============================================================
- *  BASE DE DATOS SIMULADA - Level-UP
- * ============================================================
- * Fuente de datos en memoria para la app: los registros viven en este
- * archivo y se reinician al recargar la página.
- *
- * Cada colección ofrece las mismas operaciones CRUD:
- *
- *   coleccion.crear(datos)             -> registro creado (el id se genera solo)
- *   coleccion.leerTodos([filtro])      -> arreglo de registros (filtro opcional)
- *   coleccion.leerPorId(id)            -> registro | null
- *   coleccion.actualizar(id, cambios)  -> registro actualizado | null
- *   coleccion.eliminar(id)             -> registro eliminado | null
- *
- * Colecciones: productos, eventos, noticias, usuarios y carro.
- * Los datos de entrada se validan y, si son inválidos, se lanza un Error.
- *
- * Ejemplo:
- *   import { productos, carro, formatearPrecio } from '../data/baseDeDatos.js'
- *
- *   const consolas = productos.porCategoria('consolas')
- *   carro.agregar(consolas[0].id)
- *   formatearPrecio(carro.total())   // "$799.990"
- */
-
+//BASE DE DATOS
 import imgPs5 from '../image/ps5.webp'
 import imgXbox from '../image/xbox.webp'
 import imgSwitch from '../image/switch.webp'
@@ -71,24 +46,54 @@ import imgComicCon from '../image/Comic-Con.jpg'
  * @typedef {{ id: number, categoria: Categoria, nombre: string, descripcion: string, precio: number, imagen?: string }} Producto
  * @typedef {{ id: number, nombre: string, descripcion: string, fechaInicio: string, fechaFin: string, fechaTexto?: string, lugar: string, urlUbicacion?: string, imagen?: string }} Evento
  * @typedef {{ id: number, titulo: string, descripcion: string, imagen?: string }} Noticia
- * @typedef {{ id: number, nombre: string, email: string, password: string }} UsuarioAlmacenado
- * @typedef {{ id: number, nombre: string, email: string }} Usuario
+ * @typedef {'administrador'|'cliente'} Rol
+ * @typedef {{ id: number, nombre: string, email: string, rol: Rol }} Usuario
+ * @typedef {Usuario & { password: string }} UsuarioAlmacenado
  * @typedef {{ id: number, productoId: number, cantidad: number }} ItemCarro
+ * @typedef {{ nombre: string, email: string, telefono: string, region: string, comuna: string, calle: string, numero: string, departamento?: string, referencias?: string }} DatosEntrega
+ * @typedef {{ productoId: number, nombre: string, precio: number, cantidad: number, subtotal: number }} ItemPedido
+ * @typedef {{ id: number, usuarioId: number, fecha: string, estado: string, items: ItemPedido[], total: number, entrega: DatosEntrega }} Pedido
  */
 
-// ============================================================
+
 //  Utilidades
-// ============================================================
+
 
 /** Categorías de producto. Las claves coinciden con las rutas de la app (/consolas, /juegosMesa...). */
 export const CATEGORIAS = Object.freeze({
   consolas: 'Consolas',
   accesorios: 'Accesorios',
-  computadores: 'Computadores',
+  computadores: 'Computadores Gamer',
   sillas: 'Sillas Gamer',
   juegosMesa: 'Juegos de mesa',
   merch: 'Merch',
 })
+
+/** Roles de usuario. */
+export const ROLES = Object.freeze({
+  administrador: 'Administrador',
+  cliente: 'Cliente',
+})
+
+/** Regiones de Chile, para el formulario de entrega. */
+export const REGIONES = Object.freeze([
+  'Arica y Parinacota',
+  'Tarapacá',
+  'Antofagasta',
+  'Atacama',
+  'Coquimbo',
+  'Valparaíso',
+  'Metropolitana de Santiago',
+  'Libertador General Bernardo O’Higgins',
+  'Maule',
+  'Ñuble',
+  'Biobío',
+  'La Araucanía',
+  'Los Ríos',
+  'Los Lagos',
+  'Aysén del General Carlos Ibáñez del Campo',
+  'Magallanes y de la Antártica Chilena',
+])
 
 const formatoCLP = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' })
 
@@ -116,22 +121,22 @@ const exigirCantidad = (cantidad) => {
   }
 }
 
-// ============================================================
-//  Fábrica de colecciones (CRUD genérico)
-// ============================================================
+
+//  Fábrica de colecciones (CRUD)
+
 
 /**
  * Crea una colección en memoria con las operaciones CRUD.
  *
- * @template {{ id: number }} T  Forma del registro almacenado.
- * @template [V=T]               Forma del registro que se entrega al exterior.
+ * @template {{ id: number }} T  
+ * @template [V=T]              
  * @param {string} nombre
- * @param {T[]} datosIniciales   Registros de partida (se copian, nunca se modifican).
+ * @param {T[]} datosIniciales  
  * @param {object} [opciones]
  * @param {(registro: T, otros: T[]) => void} [opciones.validar]
- *        Lanza un Error si el registro es inválido. `otros` son los demás registros.
+ *       
  * @param {string[]} [opciones.ocultar]
- *        Campos que nunca salen de la colección (por ejemplo, contraseñas).
+ *        
  */
 const crearColeccion = (nombre, datosIniciales, { validar, ocultar = [] } = {}) => {
   const copiarIniciales = () => datosIniciales.map((registro) => ({ ...registro }))
@@ -140,9 +145,17 @@ const crearColeccion = (nombre, datosIniciales, { validar, ocultar = [] } = {}) 
   let registros = copiarIniciales()
   let siguienteId = calcularSiguienteId(registros)
 
-  /** Entrega una copia (sin campos ocultos) para que nadie modifique el original. */
+  // Aviso de cambios: permite que la pantalla se actualice sola (ver useCarro.ts)
+  const oyentes = new Set()
+  let version = 0
+  const avisarCambio = () => {
+    version += 1
+    oyentes.forEach((oyente) => oyente())
+  }
+
+  /** Entrega una copia profunda (sin campos ocultos) para que nadie modifique el original. */
   const exponer = (registro) => {
-    const copia = { ...registro }
+    const copia = structuredClone(registro)
     ocultar.forEach((campo) => delete copia[campo])
     return /** @type {V} */ (/** @type {unknown} */ (copia))
   }
@@ -157,10 +170,11 @@ const crearColeccion = (nombre, datosIniciales, { validar, ocultar = [] } = {}) 
 
     /** CREATE: agrega un registro. El id siempre se genera automáticamente. */
     crear(/** @type {Omit<T, 'id'>} */ datos) {
-      const nuevo = /** @type {T} */ ({ ...datos, id: siguienteId })
+      const nuevo = /** @type {T} */ (structuredClone({ ...datos, id: siguienteId }))
       validarRegistro(nuevo)
       registros.push(nuevo)
       siguienteId += 1
+      avisarCambio()
       return exponer(nuevo)
     },
 
@@ -183,9 +197,10 @@ const crearColeccion = (nombre, datosIniciales, { validar, ocultar = [] } = {}) 
     actualizar(/** @type {number | string} */ id, /** @type {Partial<Omit<T, 'id'>>} */ cambios) {
       const indice = buscarIndice(id)
       if (indice === -1) return null
-      const actualizado = { ...registros[indice], ...cambios, id: registros[indice].id }
+      const actualizado = structuredClone({ ...registros[indice], ...cambios, id: registros[indice].id })
       validarRegistro(actualizado)
       registros[indice] = actualizado
+      avisarCambio()
       return exponer(actualizado)
     },
 
@@ -194,6 +209,7 @@ const crearColeccion = (nombre, datosIniciales, { validar, ocultar = [] } = {}) 
       const indice = buscarIndice(id)
       if (indice === -1) return null
       const [eliminado] = registros.splice(indice, 1)
+      avisarCambio()
       return exponer(eliminado)
     },
 
@@ -201,13 +217,27 @@ const crearColeccion = (nombre, datosIniciales, { validar, ocultar = [] } = {}) 
     reiniciar() {
       registros = copiarIniciales()
       siguienteId = calcularSiguienteId(registros)
+      avisarCambio()
+    },
+
+    /** Avisa cada vez que los datos cambian. Devuelve la función para dejar de escuchar. */
+    suscribir(/** @type {() => void} */ oyente) {
+      oyentes.add(oyente)
+      return () => {
+        oyentes.delete(oyente)
+      }
+    },
+
+    /** Número que sube con cada cambio (sirve para saber si hay datos nuevos). */
+    version() {
+      return version
     },
   }
 }
 
-// ============================================================
-//  Datos iniciales
-// ============================================================
+
+//  DATOS
+
 
 /** @type {Producto[]} */
 const PRODUCTOS_INICIALES = [
@@ -541,17 +571,29 @@ const NOTICIAS_INICIALES = [
 ]
 
 /**
- * Usuario de prueba. Las contraseñas se guardan en texto plano solo porque
- * esto es una simulación: en una base de datos real irían cifradas (hash).
+ * Usuarios de prueba,
  * @type {UsuarioAlmacenado[]}
  */
 const USUARIOS_INICIALES = [
-  { id: 1, nombre: 'Usuario Demo', email: 'demo@levelup.cl', password: 'demo1234' },
+  {
+    id: 1,
+    nombre: 'Administrador',
+    email: 'admin@levelup.cl',
+    password: 'admin1234',
+    rol: 'administrador',
+  },
+  {
+    id: 2,
+    nombre: 'Cliente de prueba',
+    email: 'cliente@levelup.cl',
+    password: 'cliente1234',
+    rol: 'cliente',
+  },
 ]
 
-// ============================================================
+
 //  Productos
-// ============================================================
+
 
 const coleccionProductos = crearColeccion('productos', PRODUCTOS_INICIALES, {
   validar: (producto) => {
@@ -589,9 +631,9 @@ export const productos = {
   },
 }
 
-// ============================================================
+
 //  Eventos
-// ============================================================
+
 
 export const eventos = crearColeccion('eventos', EVENTOS_INICIALES, {
   validar: (evento) => {
@@ -613,9 +655,9 @@ export const eventos = crearColeccion('eventos', EVENTOS_INICIALES, {
 export const eventoFinalizado = (/** @type {Evento} */ evento, hoy = new Date()) =>
   new Date(`${evento.fechaFin}T23:59:59`) < hoy
 
-// ============================================================
+
 //  Noticias
-// ============================================================
+
 
 export const noticias = crearColeccion('noticias', NOTICIAS_INICIALES, {
   validar: (noticia) => {
@@ -624,15 +666,18 @@ export const noticias = crearColeccion('noticias', NOTICIAS_INICIALES, {
   },
 })
 
-// ============================================================
+
 //  Usuarios
-// ============================================================
+
 
 /** @type {ReturnType<typeof crearColeccion<UsuarioAlmacenado, Usuario>>} */
 const coleccionUsuarios = crearColeccion('usuarios', USUARIOS_INICIALES, {
   ocultar: ['password'], // las lecturas nunca devuelven la contraseña
   validar: (usuario, otros) => {
     exigirTexto(usuario.nombre, 'nombre')
+    if (!Object.hasOwn(ROLES, usuario.rol)) {
+      throw new Error(`El rol "${usuario.rol}" no existe.`)
+    }
     if (typeof usuario.email !== 'string' || !REGEX_EMAIL.test(usuario.email)) {
       throw new Error('El correo electrónico no es válido.')
     }
@@ -649,6 +694,11 @@ const coleccionUsuarios = crearColeccion('usuarios', USUARIOS_INICIALES, {
 export const usuarios = {
   ...coleccionUsuarios,
 
+  /** Registra un usuario nuevo. Si no se indica el rol, queda como "cliente". */
+  crear(/** @type {Omit<UsuarioAlmacenado, 'id' | 'rol'> & { rol?: Rol }} */ datos) {
+    return coleccionUsuarios.crear({ rol: 'cliente', ...datos })
+  },
+
   /** Inicio de sesión: devuelve el usuario (sin contraseña) o null si las credenciales no coinciden. */
   autenticar(/** @type {string} */ email, /** @type {string} */ password) {
     const correo = String(email).toLowerCase()
@@ -659,9 +709,9 @@ export const usuarios = {
   },
 }
 
-// ============================================================
+
 //  Carro de compras
-// ============================================================
+
 
 const coleccionCarro = crearColeccion('carro', /** @type {ItemCarro[]} */ ([]), {
   validar: (item, otros) => {
@@ -694,6 +744,14 @@ export const carro = {
       : coleccionCarro.crear({ productoId: id, cantidad })
   },
 
+  /** Fija la cantidad de un producto que ya está en el carro (null si no estaba). */
+  cambiarCantidad(/** @type {number | string} */ productoId, /** @type {number} */ cantidad) {
+    exigirCantidad(cantidad)
+    const id = Number(productoId)
+    const [existente] = coleccionCarro.leerTodos((item) => item.productoId === id)
+    return existente ? coleccionCarro.actualizar(existente.id, { cantidad }) : null
+  },
+
   /** Quita un producto del carro (por id de producto, no de item). */
   quitarProducto(/** @type {number | string} */ productoId) {
     const id = Number(productoId)
@@ -720,9 +778,91 @@ export const carro = {
   },
 }
 
-// ============================================================
+
+//  Pedidos (checkout)
+
+
+/**
+ * Revisa los datos de entrega. Devuelve un objeto con un mensaje por cada campo
+ * incorrecto ({} si todo está bien), para mostrarlo junto a cada campo del formulario.
+ * @param {Partial<DatosEntrega>} entrega
+ * @returns {Partial<Record<keyof DatosEntrega, string>>}
+ */
+export const validarEntrega = (entrega) => {
+  /** @type {Partial<Record<keyof DatosEntrega, string>>} */
+  const errores = {}
+  const vacio = (/** @type {unknown} */ valor) => typeof valor !== 'string' || valor.trim() === ''
+  const telefono = String(entrega.telefono ?? '').replace(/[\s().-]/g, '')
+
+  if (vacio(entrega.nombre)) errores.nombre = 'Ingresa el nombre de quien recibe.'
+  if (!REGEX_EMAIL.test(String(entrega.email ?? '').trim())) {
+    errores.email = 'Ingresa un correo electrónico válido.'
+  }
+  if (!/^\+?\d{8,12}$/.test(telefono)) {
+    errores.telefono = 'Ingresa un teléfono válido, por ejemplo +56 9 1234 5678.'
+  }
+  if (!REGIONES.includes(/** @type {string} */ (entrega.region))) errores.region = 'Selecciona la región.'
+  if (vacio(entrega.comuna)) errores.comuna = 'Ingresa la comuna.'
+  if (vacio(entrega.calle)) errores.calle = 'Ingresa la calle.'
+  if (vacio(entrega.numero)) errores.numero = 'Ingresa el número.'
+  return errores
+}
+
+const coleccionPedidos = crearColeccion('pedidos', /** @type {Pedido[]} */ ([]), {
+  validar: (pedido) => {
+    if (!usuarios.leerPorId(pedido.usuarioId)) {
+      throw new Error(`No existe un usuario con id ${pedido.usuarioId}.`)
+    }
+    if (!Array.isArray(pedido.items) || pedido.items.length === 0) {
+      throw new Error('El pedido debe tener al menos un producto.')
+    }
+    if (!Number.isInteger(pedido.total) || pedido.total < 0) {
+      throw new Error('El total del pedido no es válido.')
+    }
+    const [primerError] = Object.values(validarEntrega(pedido.entrega ?? {}))
+    if (primerError) throw new Error(primerError)
+  },
+})
+
+export const pedidos = {
+  ...coleccionPedidos,
+
+  /** Pedidos de un usuario. */
+  porUsuario(/** @type {number | string} */ usuarioId) {
+    const id = Number(usuarioId)
+    return coleccionPedidos.leerTodos((pedido) => pedido.usuarioId === id)
+  },
+
+  /**
+   * Convierte el carro en un pedido con sus datos de entrega y deja el carro vacío.
+   * El pedido guarda nombre y precio de cada producto tal como estaban al comprar.
+   */
+  crearDesdeCarro(/** @type {number | string} */ usuarioId, /** @type {DatosEntrega} */ entrega) {
+    const items = carro.detalle().map(({ producto, cantidad, subtotal }) => ({
+      productoId: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      cantidad,
+      subtotal,
+    }))
+    if (items.length === 0) throw new Error('El carro está vacío.')
+
+    const pedido = coleccionPedidos.crear({
+      usuarioId: Number(usuarioId),
+      fecha: new Date().toISOString(),
+      estado: 'recibido',
+      items,
+      total: carro.total(),
+      entrega,
+    })
+    carro.vaciar()
+    return pedido
+  },
+}
+
+
 //  Reinicio general
-// ============================================================
+
 
 /** Devuelve todas las colecciones a sus datos iniciales (útil para pruebas). */
 export const reiniciarBaseDeDatos = () => {
@@ -731,4 +871,5 @@ export const reiniciarBaseDeDatos = () => {
   noticias.reiniciar()
   usuarios.reiniciar()
   carro.reiniciar()
+  pedidos.reiniciar()
 }
